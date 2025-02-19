@@ -10,6 +10,8 @@ class _LineChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LineChart(
+      clearSpots: true,
+      clearSpotsFunction: (function) {},
       isShowingMainData ? sampleData1 : sampleData2,
       duration: const Duration(milliseconds: 250),
     );

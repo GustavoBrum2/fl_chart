@@ -46,6 +46,8 @@ void main() {
                   width: viewSize.width,
                   height: viewSize.height,
                   child: LineChart(
+                    clearSpots: true,
+                    clearSpotsFunction: (function) {},
                     LineChartData(
                       titlesData: titlesData,
                       lineBarsData: [

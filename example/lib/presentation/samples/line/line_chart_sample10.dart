@@ -80,6 +80,8 @@ class _LineChartSample10State extends State<LineChartSample10> {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 24.0),
                   child: LineChart(
+                    clearSpots: true,
+                    clearSpotsFunction: (function) {},
                     LineChartData(
                       minY: -1,
                       maxY: 1,

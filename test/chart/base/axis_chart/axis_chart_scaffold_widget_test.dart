@@ -1289,6 +1289,8 @@ void main() {
               itemBuilder: (context, index) => SizedBox(
                 height: 300,
                 child: LineChart(
+                  clearSpots: true,
+                  clearSpotsFunction: (function) {},
                   lineChartDataWithNoTitles,
                   // This is for test
                   // ignore: avoid_redundant_argument_values

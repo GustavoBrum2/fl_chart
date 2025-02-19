@@ -149,6 +149,8 @@ class _LineChartSample13State extends State<LineChartSample13> {
                     right: 18.0,
                   ),
                   child: LineChart(
+                    clearSpots: true,
+                    clearSpotsFunction: (function) {},
                     LineChartData(
                       minY: overallMinTemp - 5,
                       maxY: overallMaxTemp + 5,

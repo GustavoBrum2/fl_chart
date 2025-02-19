@@ -22,6 +22,8 @@ void main() {
       await tester.pumpWidget(
         createTestWidget(
           chart: LineChart(
+            clearSpots: true,
+            clearSpotsFunction: (function) {},
             LineChartData(),
           ),
         ),
@@ -36,6 +38,8 @@ void main() {
       await tester.pumpWidget(
         createTestWidget(
           chart: LineChart(
+            clearSpots: true,
+            clearSpotsFunction: (function) {},
             LineChartData(),
           ),
         ),
@@ -63,6 +67,8 @@ void main() {
         createTestWidget(
           chart: LineChart(
             LineChartData(),
+            clearSpots: true,
+            clearSpotsFunction: (function) {},
             transformationConfig: transformationConfig,
           ),
         ),
@@ -84,6 +90,8 @@ void main() {
         await tester.pumpWidget(
           createTestWidget(
             chart: LineChart(
+              clearSpots: true,
+              clearSpotsFunction: (function) {},
               LineChartData(),
               transformationConfig: FlTransformationConfig(
                 scaleAxis: scaleAxis,
@@ -104,6 +112,8 @@ void main() {
       await tester.pumpWidget(
         createTestWidget(
           chart: LineChart(
+            clearSpots: true,
+            clearSpotsFunction: (function) {},
             LineChartData(),
             // This is for test
             // ignore: avoid_redundant_argument_values
@@ -129,6 +139,8 @@ void main() {
           createTestWidget(
             chart: LineChart(
               LineChartData(),
+              clearSpots: true,
+              clearSpotsFunction: (function) {},
             ),
           ),
         );
@@ -164,6 +176,8 @@ void main() {
           createTestWidget(
             chart: LineChart(
               LineChartData(),
+              clearSpots: true,
+              clearSpotsFunction: (function) {},
               transformationConfig: const FlTransformationConfig(
                 scaleAxis: FlScaleAxis.free,
               ),
@@ -208,6 +222,8 @@ void main() {
           createTestWidget(
             chart: LineChart(
               LineChartData(),
+              clearSpots: true,
+              clearSpotsFunction: (function) {},
               transformationConfig: const FlTransformationConfig(
                 scaleAxis: FlScaleAxis.horizontal,
               ),
@@ -251,6 +267,8 @@ void main() {
           createTestWidget(
             chart: LineChart(
               LineChartData(),
+              clearSpots: true,
+              clearSpotsFunction: (function) {},
               transformationConfig: const FlTransformationConfig(
                 scaleAxis: FlScaleAxis.vertical,
               ),
@@ -298,6 +316,8 @@ void main() {
             createTestWidget(
               chart: LineChart(
                 LineChartData(),
+                clearSpots: true,
+                clearSpotsFunction: (function) {},
                 transformationConfig: const FlTransformationConfig(
                   scaleAxis: FlScaleAxis.horizontal,
                 ),
@@ -352,6 +372,8 @@ void main() {
             createTestWidget(
               chart: LineChart(
                 LineChartData(),
+                clearSpots: true,
+                clearSpotsFunction: (function) {},
                 transformationConfig: const FlTransformationConfig(
                   scaleAxis: FlScaleAxis.vertical,
                 ),
@@ -405,6 +427,8 @@ void main() {
             createTestWidget(
               chart: LineChart(
                 LineChartData(),
+                clearSpots: true,
+                clearSpotsFunction: (function) {},
                 transformationConfig: const FlTransformationConfig(
                   scaleAxis: FlScaleAxis.free,
                 ),
@@ -466,6 +490,8 @@ void main() {
             createTestWidget(
               chart: LineChart(
                 LineChartData(),
+                clearSpots: true,
+                clearSpotsFunction: (function) {},
                 transformationConfig: const FlTransformationConfig(
                   scaleAxis: FlScaleAxis.horizontal,
                 ),
@@ -525,6 +551,8 @@ void main() {
             createTestWidget(
               chart: LineChart(
                 LineChartData(),
+                clearSpots: true,
+                clearSpotsFunction: (function) {},
                 transformationConfig: const FlTransformationConfig(
                   scaleAxis: FlScaleAxis.vertical,
                 ),
@@ -584,6 +612,8 @@ void main() {
             createTestWidget(
               chart: LineChart(
                 LineChartData(),
+                clearSpots: true,
+                clearSpotsFunction: (function) {},
                 transformationConfig: const FlTransformationConfig(
                   scaleAxis: FlScaleAxis.free,
                 ),
@@ -648,6 +678,8 @@ void main() {
             createTestWidget(
               chart: LineChart(
                 LineChartData(),
+                clearSpots: true,
+                clearSpotsFunction: (function) {},
                 transformationConfig: const FlTransformationConfig(
                   // This is for test
                   // ignore: avoid_redundant_argument_values
@@ -685,6 +717,8 @@ void main() {
               createTestWidget(
                 chart: LineChart(
                   LineChartData(),
+                  clearSpots: true,
+                  clearSpotsFunction: (function) {},
                   transformationConfig: FlTransformationConfig(
                     scaleAxis: scaleAxis,
                     // This is for test
@@ -720,6 +754,8 @@ void main() {
           createTestWidget(
             chart: LineChart(
               LineChartData(),
+              clearSpots: true,
+              clearSpotsFunction: (function) {},
               transformationConfig: const FlTransformationConfig(
                 scaleAxis: FlScaleAxis.horizontal,
                 trackpadScrollCausesScale: true,
@@ -757,6 +793,8 @@ void main() {
           createTestWidget(
             chart: LineChart(
               LineChartData(),
+              clearSpots: true,
+              clearSpotsFunction: (function) {},
               transformationConfig: const FlTransformationConfig(
                 scaleAxis: FlScaleAxis.vertical,
                 trackpadScrollCausesScale: true,
@@ -797,6 +835,8 @@ void main() {
           createTestWidget(
             chart: LineChart(
               LineChartData(),
+              clearSpots: true,
+              clearSpotsFunction: (function) {},
               transformationConfig: const FlTransformationConfig(
                 scaleAxis: FlScaleAxis.free,
                 trackpadScrollCausesScale: true,

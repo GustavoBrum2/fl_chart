@@ -55,6 +55,8 @@ class LineChartSample9 extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return LineChart(
+              clearSpots: true,
+              clearSpotsFunction: (function) {},
               LineChartData(
                 lineTouchData: LineTouchData(
                   touchTooltipData: LineTouchTooltipData(

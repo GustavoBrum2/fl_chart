@@ -23,10 +23,14 @@ class LineChart extends ImplicitlyAnimatedWidget {
     super.duration = const Duration(milliseconds: 150),
     super.curve = Curves.linear,
     this.transformationConfig = const FlTransformationConfig(),
+    required this.clearSpots,
+    required this.clearSpotsFunction,
   });
 
   /// Determines how the [LineChart] should be look like.
   final LineChartData data;
+  final Function(Function function) clearSpotsFunction;
+  final bool clearSpots;
 
   /// {@macro fl_chart.AxisChartScaffoldWidget.transformationConfig}
   final FlTransformationConfig transformationConfig;
@@ -58,6 +62,11 @@ class _LineChartState extends AnimatedWidgetBaseState<LineChart> {
   @override
   Widget build(BuildContext context) {
     final showingData = _getData();
+
+    widget.clearSpotsFunction.call(() {
+      _showingTouchedIndicators.clear();
+      _showingTouchedTooltips.clear();
+    });
 
     return AxisChartScaffoldWidget(
       transformationConfig: widget.transformationConfig,
@@ -135,10 +144,14 @@ class _LineChartState extends AnimatedWidgetBaseState<LineChart> {
     if (!event.isInterestedForInteractions ||
         touchResponse?.lineBarSpots == null ||
         touchResponse!.lineBarSpots!.isEmpty) {
-      setState(() {
-        _showingTouchedTooltips.clear();
-        _showingTouchedIndicators.clear();
-      });
+      setState(
+        () {
+          if (widget.clearSpots) {
+            _showingTouchedTooltips.clear();
+            _showingTouchedIndicators.clear();
+          }
+        },
+      );
       return;
     }
 

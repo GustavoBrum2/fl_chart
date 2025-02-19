@@ -120,6 +120,8 @@ class _LineChartSample5State extends State<LineChartSample5> {
         ),
         child: LayoutBuilder(builder: (context, constraints) {
           return LineChart(
+            clearSpots: true,
+            clearSpotsFunction: (function) {},
             LineChartData(
               showingTooltipIndicators: showingTooltipOnSpots.map((index) {
                 return ShowingTooltipIndicators([
