@@ -15,7 +15,7 @@ funding:
   - https://www.buymeacoffee.com/fl_chart
 
 dependencies:
-  build_runner: ^2.4.13
+  build_runner: ^2.4.9
   equatable: ^2.0.7
   flutter:
     sdk: flutter
