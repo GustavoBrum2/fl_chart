@@ -5,7 +5,7 @@ extension PaintExtension on Paint {
   void transparentIfWidthIsZero() {
     if (strokeWidth == 0) {
       shader = null;
-      color = color.withValues(alpha: 0);
+      color = color.withOpacity( 0);
     }
   }
 

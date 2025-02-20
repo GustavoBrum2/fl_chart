@@ -998,7 +998,7 @@ class LineChartPainter extends AxisChartPainter<LineChartData> {
     Path barPath,
     LineChartBarData barData,
   ) {
-    if (!barData.show || barData.shadow.color.a == 0.0) {
+    if (!barData.show || barData.shadow.color.alpha == 0.0) {
       return;
     }
     if (barPath.computeMetrics().isEmpty) {

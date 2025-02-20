@@ -6,10 +6,10 @@ extension ColorExtension on Color {
     assert(1 <= percent && percent <= 100);
     final value = 1 - percent / 100;
     return Color.fromARGB(
-      _floatToInt8(a),
-      (_floatToInt8(r) * value).round(),
-      (_floatToInt8(g) * value).round(),
-      (_floatToInt8(b) * value).round(),
+      _floatToInt8(alpha.toDouble()),
+      (_floatToInt8(red.toDouble()) * value).round(),
+      (_floatToInt8(green.toDouble()) * value).round(),
+      (_floatToInt8(blue.toDouble()) * value).round(),
     );
   }
 
@@ -17,19 +17,33 @@ extension ColorExtension on Color {
     assert(1 <= percent && percent <= 100);
     final value = percent / 100;
     return Color.fromARGB(
-      _floatToInt8(a),
-      (_floatToInt8(r) + ((255 - _floatToInt8(r)) * value)).round(),
-      (_floatToInt8(g) + ((255 - _floatToInt8(g)) * value)).round(),
-      (_floatToInt8(b) + ((255 - _floatToInt8(b)) * value)).round(),
+      _floatToInt8(alpha.toDouble()),
+      (_floatToInt8(red.toDouble()) +
+              ((255 - _floatToInt8(red.toDouble())) * value))
+          .round(),
+      (_floatToInt8(green.toDouble()) +
+              ((255 - _floatToInt8(green.toDouble())) * value))
+          .round(),
+      (_floatToInt8(blue.toDouble()) +
+              ((255 - _floatToInt8(blue.toDouble())) * value))
+          .round(),
     );
   }
 
   Color avg(Color other) {
-    final red = (_floatToInt8(r) + _floatToInt8(other.r)) ~/ 2;
-    final green = (_floatToInt8(g) + _floatToInt8(other.g)) ~/ 2;
-    final blue = (_floatToInt8(b) + _floatToInt8(other.b)) ~/ 2;
-    final alpha = (_floatToInt8(a) + _floatToInt8(other.a)) ~/ 2;
-    return Color.fromARGB(alpha, red, green, blue);
+    final red1 =
+        (_floatToInt8(red.toDouble()) + _floatToInt8(other.red.toDouble())) ~/
+            2;
+    final green1 = (_floatToInt8(green.toDouble()) +
+            _floatToInt8(other.green.toDouble())) ~/
+        2;
+    final blue1 =
+        (_floatToInt8(blue.toDouble()) + _floatToInt8(other.blue.toDouble())) ~/
+            2;
+    final alpha1 = (_floatToInt8(alpha.toDouble()) +
+            _floatToInt8(other.alpha.toDouble())) ~/
+        2;
+    return Color.fromARGB(alpha1, red1, green1, blue1);
   }
 
   // Int color components were deprecated in Flutter 3.27.0.

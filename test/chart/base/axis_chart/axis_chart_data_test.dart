@@ -246,7 +246,7 @@ void main() {
       expect(
         horizontalRangeAnnotation1 ==
             HorizontalRangeAnnotation(
-              color: Colors.green.withValues(alpha: 0.5),
+              color: Colors.green.withOpacity( 0.5),
               y2: 12,
               y1: 12.1,
             ),
@@ -278,7 +278,7 @@ void main() {
       expect(
         verticalRangeAnnotation1 ==
             VerticalRangeAnnotation(
-              color: Colors.green.withValues(alpha: 0.5),
+              color: Colors.green.withOpacity( 0.5),
               x2: 12,
               x1: 12.1,
             ),

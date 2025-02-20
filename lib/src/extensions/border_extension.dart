@@ -9,10 +9,10 @@ extension BorderExtension on Border {
       return false;
     }
 
-    if (left.color.a == 0.0 &&
-        top.color.a == 0.0 &&
-        right.color.a == 0.0 &&
-        bottom.color.a == 0.0) {
+    if (left.color.alpha == 0.0 &&
+        top.color.alpha == 0.0 &&
+        right.color.alpha == 0.0 &&
+        bottom.color.alpha == 0.0) {
       return false;
     }
     return true;

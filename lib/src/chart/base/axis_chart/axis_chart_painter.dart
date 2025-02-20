@@ -156,7 +156,7 @@ abstract class AxisChartPainter<D extends AxisChartData>
   @visibleForTesting
   void drawBackground(CanvasWrapper canvasWrapper, PaintHolder<D> holder) {
     final data = holder.data;
-    if (data.backgroundColor.a == 0.0) {
+    if (data.backgroundColor.alpha == 0.0) {
       return;
     }
 

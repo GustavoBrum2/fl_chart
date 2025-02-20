@@ -9,11 +9,11 @@ class LineChartSample4 extends StatelessWidget {
     Color? belowLineColor,
     Color? aboveLineColor,
   })  : mainLineColor =
-            mainLineColor ?? AppColors.contentColorYellow.withValues(alpha: 1),
+            mainLineColor ?? AppColors.contentColorYellow.withOpacity( 1),
         belowLineColor =
-            belowLineColor ?? AppColors.contentColorPink.withValues(alpha: 1),
+            belowLineColor ?? AppColors.contentColorPink.withOpacity( 1),
         aboveLineColor = aboveLineColor ??
-            AppColors.contentColorPurple.withValues(alpha: 0.7);
+            AppColors.contentColorPurple.withOpacity( 0.7);
 
   final Color mainLineColor;
   final Color belowLineColor;

@@ -243,7 +243,7 @@ class BarChartSample2State extends State<BarChartSample2> {
         Container(
           width: width,
           height: 10,
-          color: Colors.white.withValues(alpha: 0.4),
+          color: Colors.white.withOpacity( 0.4),
         ),
         const SizedBox(
           width: space,
@@ -251,7 +251,7 @@ class BarChartSample2State extends State<BarChartSample2> {
         Container(
           width: width,
           height: 28,
-          color: Colors.white.withValues(alpha: 0.8),
+          color: Colors.white.withOpacity( 0.8),
         ),
         const SizedBox(
           width: space,
@@ -259,7 +259,7 @@ class BarChartSample2State extends State<BarChartSample2> {
         Container(
           width: width,
           height: 42,
-          color: Colors.white.withValues(alpha: 1),
+          color: Colors.white.withOpacity( 1),
         ),
         const SizedBox(
           width: space,
@@ -267,7 +267,7 @@ class BarChartSample2State extends State<BarChartSample2> {
         Container(
           width: width,
           height: 28,
-          color: Colors.white.withValues(alpha: 0.8),
+          color: Colors.white.withOpacity( 0.8),
         ),
         const SizedBox(
           width: space,
@@ -275,7 +275,7 @@ class BarChartSample2State extends State<BarChartSample2> {
         Container(
           width: width,
           height: 10,
-          color: Colors.white.withValues(alpha: 0.4),
+          color: Colors.white.withOpacity( 0.4),
         ),
       ],
     );

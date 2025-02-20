@@ -45,7 +45,6 @@ class _LineChartSample12State extends State<LineChartSample12> {
   Widget build(BuildContext context) {
     const leftReservedSize = 52.0;
     return Column(
-      spacing: 16,
       children: [
         LayoutBuilder(
           builder: (context, constraints) {
@@ -78,7 +77,6 @@ class _LineChartSample12State extends State<LineChartSample12> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            spacing: 16,
             children: [
               const Text('Pan'),
               Switch(
@@ -140,8 +138,8 @@ class _LineChartSample12State extends State<LineChartSample12> {
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.contentColorYellow.withValues(alpha: 0.2),
-                          AppColors.contentColorYellow.withValues(alpha: 0.0),
+                          AppColors.contentColorYellow.withOpacity( 0.2),
+                          AppColors.contentColorYellow.withOpacity(0.0),
                         ],
                         stops: const [0.5, 1.0],
                         begin: Alignment.topCenter,

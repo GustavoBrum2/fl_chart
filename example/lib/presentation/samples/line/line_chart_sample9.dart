@@ -132,12 +132,12 @@ class LineChartSample9 extends StatelessWidget {
                     return value.toInt() == 0;
                   },
                   getDrawingHorizontalLine: (_) => FlLine(
-                    color: AppColors.contentColorBlue.withValues(alpha: 1),
+                    color: AppColors.contentColorBlue.withOpacity(1),
                     dashArray: [8, 2],
                     strokeWidth: 0.8,
                   ),
                   getDrawingVerticalLine: (_) => FlLine(
-                    color: AppColors.contentColorYellow.withValues(alpha: 1),
+                    color: AppColors.contentColorYellow.withOpacity( 1),
                     dashArray: [8, 2],
                     strokeWidth: 0.8,
                   ),

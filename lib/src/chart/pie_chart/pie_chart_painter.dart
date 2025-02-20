@@ -143,7 +143,7 @@ class PieChartPainter extends BaseChartPainter<PieChartData> {
           ..restore();
         _sectionPaint.blendMode = BlendMode.srcOver;
         if (section.borderSide.width != 0.0 &&
-            section.borderSide.color.a != 0.0) {
+            section.borderSide.color.alpha != 0.0) {
           _sectionStrokePaint
             ..strokeWidth = section.borderSide.width
             ..color = section.borderSide.color;
@@ -329,7 +329,7 @@ class PieChartPainter extends BaseChartPainter<PieChartData> {
     CanvasWrapper canvasWrapper,
     Size viewSize,
   ) {
-    if (section.borderSide.width != 0.0 && section.borderSide.color.a != 0.0) {
+    if (section.borderSide.width != 0.0 && section.borderSide.color.alpha != 0.0) {
       canvasWrapper
         ..saveLayer(
           Rect.fromLTWH(0, 0, viewSize.width, viewSize.height),

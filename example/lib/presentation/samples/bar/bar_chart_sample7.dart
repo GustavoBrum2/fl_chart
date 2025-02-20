@@ -99,7 +99,7 @@ class _BarChartSample7State extends State<BarChartSample7> {
                   show: true,
                   border: Border.symmetric(
                     horizontal: BorderSide(
-                      color: AppColors.borderColor.withValues(alpha: 0.2),
+                      color: AppColors.borderColor.withOpacity( 0.2),
                     ),
                   ),
                 ),
@@ -135,7 +135,7 @@ class _BarChartSample7State extends State<BarChartSample7> {
                   show: true,
                   drawVerticalLine: false,
                   getDrawingHorizontalLine: (value) => FlLine(
-                    color: AppColors.borderColor.withValues(alpha: 0.2),
+                    color: AppColors.borderColor.withOpacity( 0.2),
                     strokeWidth: 1,
                   ),
                 ),

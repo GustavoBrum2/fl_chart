@@ -103,7 +103,7 @@ class BarChartSample4State extends State<BarChartSample4> {
                   show: true,
                   checkToShowHorizontalLine: (value) => value % 10 == 0,
                   getDrawingHorizontalLine: (value) => FlLine(
-                    color: AppColors.borderColor.withValues(alpha: 0.1),
+                    color: AppColors.borderColor.withOpacity(0.1),
                     strokeWidth: 1,
                   ),
                   drawVerticalLine: false,

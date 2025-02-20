@@ -91,9 +91,9 @@ class _LineChartSample5State extends State<LineChartSample5> {
           show: true,
           gradient: LinearGradient(
             colors: [
-              widget.gradientColor1.withValues(alpha: 0.4),
-              widget.gradientColor2.withValues(alpha: 0.4),
-              widget.gradientColor3.withValues(alpha: 0.4),
+              widget.gradientColor1.withOpacity(0.4),
+              widget.gradientColor2.withOpacity(0.4),
+              widget.gradientColor3.withOpacity(0.4),
             ],
           ),
         ),
