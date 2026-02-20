@@ -38,6 +38,7 @@ void main() {
         topTitles: AxisTitles(),
         bottomTitles: AxisTitles(),
       ),
+      barTouchData: const BarTouchData(enabled: false),
     );
 
     const textScaler = TextScaler.linear(4);
@@ -69,6 +70,7 @@ void main() {
       expect(renderBarChart.paintHolder.data == data, true);
       expect(renderBarChart.paintHolder.targetData == targetData, true);
       expect(renderBarChart.paintHolder.textScaler == textScaler, true);
+      expect(renderBarChart.hitTestSelf(Offset.zero), false);
     });
 
     test('test 2 check paint function', () {
@@ -101,9 +103,14 @@ void main() {
         });
         return MockData.barTouchedSpot;
       });
+
+      when(mockPainter.getChartCoordinateFromPixel(any, any, any))
+          .thenAnswer((_) => const Offset(10, 10));
+
       final touchResponse =
           renderBarChart.getResponseAtLocation(MockData.offset1);
       expect(touchResponse.spot, MockData.barTouchedSpot);
+      expect(touchResponse.touchChartCoordinate, const Offset(10, 10));
       expect(results[0]['local_position'] as Offset, MockData.offset1);
       expect(results[0]['size'] as Size, mockSize);
       final paintHolder = results[0]['paint_holder'] as PaintHolder;

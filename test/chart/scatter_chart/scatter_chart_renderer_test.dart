@@ -18,7 +18,10 @@ void main() {
       scatterSpots: [MockData.scatterSpot1, MockData.scatterSpot2],
     );
 
-    final targetData = ScatterChartData(scatterSpots: [MockData.scatterSpot3]);
+    final targetData = ScatterChartData(
+      scatterSpots: [MockData.scatterSpot3],
+      scatterTouchData: ScatterTouchData(enabled: false),
+    );
 
     const textScaler = TextScaler.linear(4);
 
@@ -49,6 +52,7 @@ void main() {
       expect(renderScatterChart.paintHolder.data == data, true);
       expect(renderScatterChart.paintHolder.targetData == targetData, true);
       expect(renderScatterChart.paintHolder.textScaler == textScaler, true);
+      expect(renderScatterChart.hitTestSelf(Offset.zero), false);
     });
 
     test('test 2 check paint function', () {
@@ -81,9 +85,12 @@ void main() {
         });
         return MockData.scatterTouchedSpot;
       });
+      when(mockPainter.getChartCoordinateFromPixel(any, any, any))
+          .thenAnswer((_) => const Offset(10, 10));
       final touchResponse =
           renderScatterChart.getResponseAtLocation(MockData.offset1);
       expect(touchResponse.touchedSpot, MockData.scatterTouchedSpot);
+      expect(touchResponse.touchChartCoordinate, const Offset(10, 10));
       expect(results[0]['local_position'] as Offset, MockData.offset1);
       expect(results[0]['size'] as Size, mockSize);
       final paintHolder = results[0]['paint_holder'] as PaintHolder;

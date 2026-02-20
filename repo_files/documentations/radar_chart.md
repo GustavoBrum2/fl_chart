@@ -38,6 +38,7 @@ When you change the chart's state, it animates to the new state internally (usin
 |:---------------|:---------------|:-------|
 |dataEntries|Each RadarDataSet contains list of [RadarEntries ](#RadarEntry) that is shown in RadarChart.|[]|
 |fillColor|fills the DataSet with the specified color.|Colors.black12|
+|fillGradient|fills the DataSet with the specified gradient colors.| null |
 |borderColor|Paint the DataSet border with the specified color.|Colors.blueAccent|
 |borderWidth|defines the width of [RadarDataSet](#RadarDataSet) border.|2.0|
 |entryRadius|defines the radius of each [RadarEntries ](#RadarEntry).|5.0|
@@ -60,6 +61,7 @@ When you change the chart's state, it animates to the new state internally (usin
 ### RadarTouchResponse
 |PropName|Description|default value|
 |:-------|:----------|:------------|
+|touchLocation|the location of the touch event in the device pixels coordinates|required|
 |touchedSpot|the [RadarTouchedSpot](#RadarTouchedSpot) that user touched| null |
 
 ### RadarTouchedSpot
@@ -74,6 +76,7 @@ When you change the chart's state, it animates to the new state internally (usin
 |PropName|Description|default value|
 |:-------|:----------|:------------|
 |text|the text of the title|required|
+|children| A list of [InlineSpan](https://api.flutter.dev/flutter/painting/InlineSpan-class.html) that you can provide to have different texts with different styels. Just like how [TextSpan](https://api.flutter.dev/flutter/painting/TextSpan-class.html) works|null|
 |angle|the angle used to rotate the title (in degree)|0|
 |positionPercentageOffset|this field is the place of showing title. The higher the value of this field, the more titles move away from the chart. this field should be between 0 and 1|null|
 

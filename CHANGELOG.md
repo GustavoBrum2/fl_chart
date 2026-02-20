@@ -1,3 +1,56 @@
+## newVersion
+* **BUGFIX** (by @imaNNeo) Consider the `enabled` property in [LineTouchData](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/line_chart.md#linetouchdata-read-about-touch-handling), [BarTouchData](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/bar_chart.md#bartouchdata-read-about-touch-handling), [PieTouchData](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/pie_chart.md#pietouchdata-read-about-touch-handling), [ScatterTouchData](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/scatter_chart.md#scattertouchdata-read-about-touch-handling), [RadarTouchData](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/radar_chart.md#radartouchdata-read-about-touch-handling) and [CandlestickTouchData](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/candlestick_chart.md#candlesticktouchdata-read-about-touch-handling), #1676
+* **BUGFIX** (by @artshooter) Fix wrong bar chart color with small value, #1757
+* **FEATURE** (by @3ph) Add `horizontalMirrored` and `verticalMirrored` properties in our `LabelDirection` enum which is used in ([HorizontalLineLabel](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/base_chart.md#HorizontalLineLabel) and [VerticalLineLabel](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/base_chart.md#VerticalLineLabel)), #1890
+
+## 1.1.1
+* **IMPROVEMENT** (by @imaNNeo) Upgrade `vector_math` dependency to `2.2.0`, #1985
+* **IMPROVEMENT** (by @imaNNeo) Upgrade `build_runner` (dev) dependency to `2.8.0`
+* **IMPROVEMENT** (by @imaNNeo) Upgrade `mockito` (dev) dependency to `5.5.1`
+* **IMPROVEMENT** (by @imaNNeo) Upgrade `very_good_analysis` (dev) dependency to `9.0.0`
+
+## 1.1.0
+* **FEATURE** (by @kamilJ96) Add `gradient` property inside our `BarChartRodStackItem` to be able to render gradient (along with the possibility to render a solid color), #919
+* **FEATURE** (by @alettsy) Add `sideTitleAlignment` property in our `AxisTitles` to allow you to control the alignment of side titles (for example show them inside the chart), #1946
+* **FEATURE** (by @huanghui1998hhh) Add `gradientArea` property to `LineChartBarData` to allow you to control the scope of gradient effects, #1925
+* **FEATURE** (by @alikhavarii13) Add `label` and `labelStyle` properties in our `BarChartRodStackItem` to allow you to show labels on each stack item, #598
+* **BREAKING** ⚠️ (by @alikhavarii13) `borderSide` now is a [named parameter](https://dart.dev/language/functions#named-parameters) (instead of a [optional positional parameter](https://dart.dev/language/functions#optional-positional-parameters) in `BarChartRodStackItem` constructor. As it is a very minor breaking change, we decided to include it in this minor release (instead of doing a major release based on the [semantic versioning](https://semver.org/). Sorry about that!
+So you just need to change this:
+```dart
+BarChartRodStackItem(
+  0,
+  10,
+  Colors.green,
+  BorderSide(color: Colors.white),
+),
+```
+to this:
+```dart
+BarChartRodStackItem(
+  0,
+  10,
+  Colors.green,
+  borderSide: BorderSide(color: Colors.white),
+),
+```
+
+## 1.0.0
+<img width="600" alt="Image" src="https://github.com/user-attachments/assets/3d8b58f4-4ce7-489f-ba45-27ece063f57c" />
+
+* **FEATURE** (by @imaNNeo) Implement a new chart type called CandlestickChart. You can take a look at the documentation [here](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/candlestick_chart.md). And I just implemented a basic example to show the Bitcoin price in 2024, you can take a look at it in our sample app [here](https://app.flchart.dev/#/candlestick). #433, #1143
+<img width="400" alt="Image" src="https://github.com/user-attachments/assets/f71b9e4f-3aa8-4688-a5c1-ffd8ff12fba1" />
+
+* **BREAKING** (by @imaNNeo) Remove the deprecated `tooltipRoundedRadius` property -> you should use `tooltipBorderRadius` instead.
+* **BUGFIX** (by @imaNNeo) Fix the BarChartData mismatch issue when changing the data, #1911
+* **FEATURE** (by @frybitsinc) Add fillGradient property in [RadarDataSet](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/radar_chart.md#radardataset)
+* **BREAKING** (by @imaNNeo) Upgrade the min flutter version to `3.27.4`. So please make sure that your project is not using an old flutter version, #1846
+* **IMPORTANT** (by @imaNNeo) You can read more about this release and the history of fl_chart here in my [blog post](https://flutter4fun.com/fl-chart-1-0-0)
+
+## 0.71.0
+* **IMPROVEMENT** (by @MattiaPispisa) Add a new property called `BorderRadius tooltipBorderRadius` instead of (deprecated) `double tooltipRoundedRadius` in `BarTouchTooltipData`, `LineTouchTooltipData` and `ScatterTouchTooltipData` #1715
+* **FEATURE** (by @frybitsinc) Add `children` property in our [RadarChartTitle](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/radar_chart.md#radarcharttitle), #1840
+* **BUGFIX** (by @morvagergely) Fix the initial zoom issue in our scrollable LineChart, #1863
+
 ## 0.70.2
 * **FEATURE** (by @imaNNeo) Add error range feature in our axis-based charts. You can set `xError` and `yError` in the [FlSpot](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/base_chart.md#flspot) or `toYErrorRange` in [BarChartRodData](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/bar_chart.md#barchartroddata). Also we have `errorIndicatorData` property in our [LineChartData](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/line_chart.md#linechartdata), [BarChartData](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/bar_chart.md#barchartdata) and [ScatterChartData](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/scatter_chart.md#scatterchartdata) that is responsible to render the error bars. You can take a look at the [LineChartSample 13](https://github.com/imaNNeo/fl_chart/blob/main/example/lib/presentation/samples/line/line_chart_sample13.dart) and [BarChartSample 8](https://github.com/imaNNeo/fl_chart/blob/main/example/lib/presentation/samples/bar/bar_chart_sample8.dart) in our [sample app](https://app.flchart.dev), #1483 
 
@@ -6,6 +59,7 @@
 * **FEATURE** (by @mitulagr2) Add `renderPriority` feature in our [ScatterSpot](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/scatter_chart.md#scatterspot), #1545
 * **FEATURE** (by @imaNNeo) Add `rotationQuarterTurns` property in our Axis-Based charts (such as [LineChart](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/line_chart.md), [BarChart](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/bar_chart.md) and [ScatterChart](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/scatter_chart.md)). It allows you to rotate the chart 90 degrees (clockwise) in each turn. For example you can have Horizontal Bar Charts by setting `rotationQuarterTurns` to 1 (which rotates the chart 90 degrees clockwise). It works exactly like [RotatesBox](https://api.flutter.dev/flutter/widgets/RotatedBox-class.html) widget, #113
 * **FEATURE** (by @soraef) Add `isMinValueAtCenter` property in the [RadarChart](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/radar_chart.md) to allow the user to set the minimum value at the center of the chart, #1351, #1442
+* **BREAKING** (by @imaNNeo) Add `TitleMeta` parameter in the `SideTitleWidget` instead of `axisSide`
 
 ## 0.70.0
 * **FEATURE** (by @Peetee06) Implemented a 5 years-old feature request about scroll and zoom support in our axis-based charts. Special thanks to @Peetee06 who made it happen, #71

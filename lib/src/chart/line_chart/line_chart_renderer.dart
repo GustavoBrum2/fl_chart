@@ -122,12 +122,28 @@ class RenderLineChart extends RenderBaseChart<LineTouchResponse> {
   }
 
   @override
+  bool hitTestSelf(Offset position) {
+    if (!targetData.lineTouchData.enabled) {
+      return false;
+    }
+    return super.hitTestSelf(position);
+  }
+
+  @override
   LineTouchResponse getResponseAtLocation(Offset localPosition) {
-    final touchedSpots = painter.handleTouch(
-      localPosition,
-      mockTestSize ?? size,
-      paintHolder,
+    final chartSize = mockTestSize ?? size;
+    return LineTouchResponse(
+      touchLocation: localPosition,
+      touchChartCoordinate: painter.getChartCoordinateFromPixel(
+        localPosition,
+        chartSize,
+        paintHolder,
+      ),
+      lineBarSpots: painter.handleTouch(
+        localPosition,
+        chartSize,
+        paintHolder,
+      ),
     );
-    return LineTouchResponse(touchedSpots);
   }
 }

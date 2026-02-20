@@ -1,6 +1,6 @@
 ## FL Chart Documentation
-FlChart allows you to draw your charts in the Flutter, currently we support these type of charts,
-click and learn more about them.
+FlChart allows you to draw your charts in Flutter. Currently, we support these types of charts,
+Click and learn more about them.
 
 - [LineChart](line_chart.md)
 
@@ -11,6 +11,8 @@ click and learn more about them.
 - [ScatterChart](scatter_chart.md)
 
 - [RadarChart](radar_chart.md)
+
+- [CandlestickChart](candlestick_chart.md)
 
 -----------
 

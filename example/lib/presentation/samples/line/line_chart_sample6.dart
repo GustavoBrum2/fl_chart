@@ -127,7 +127,7 @@ class LineChartSample6 extends StatelessWidget {
           LineChartData(
             lineTouchData: LineTouchData(
               touchTooltipData: LineTouchTooltipData(
-                tooltipRoundedRadius: 0,
+                tooltipBorderRadius: BorderRadius.zero,
                 getTooltipColor: (spot) => Colors.white,
                 getTooltipItems: (List<LineBarSpot> touchedSpots) {
                   return touchedSpots.map((LineBarSpot touchedSpot) {

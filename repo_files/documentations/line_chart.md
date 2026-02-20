@@ -45,6 +45,7 @@ When you change the chart's state, it animates to the new state internally (usin
 |spots| list of [FlSpot](base_chart.md#FlSpot)'s x and y coordinates that the line go through it| []
 |color|color of the line|[Colors.redAccent]|
 |gradient| You can use any [Gradient](https://api.flutter.dev/flutter/dart-ui/Gradient-class.html) here. such as [LinearGradient](https://api.flutter.dev/flutter/painting/LinearGradient-class.html) or [RadialGradient](https://api.flutter.dev/flutter/painting/RadialGradient-class.html)|null|
+|gradientArea| determines the area where the gradient is applied |null|
 |barWidth| gets the stroke width of the line bar|2.0|
 |isCurved| curves the corners of the line on the spot's positions| false|
 |curveSmoothness| smoothness radius of the curve corners (works when isCurved is true) | 0.35|
@@ -121,7 +122,7 @@ When you change the chart's state, it animates to the new state internally (usin
  |PropName|Description|default value|
  |:-------|:----------|:------------|
  |tooltipBorder|border of the tooltip bubble|BorderSide.none|
- |tooltipRoundedRadius|background corner radius of the tooltip bubble|4|
+ |tooltipBorderRadius|background corner radius of the tooltip bubble|BorderRadius.circular(4)|
  |tooltipPadding|padding of the tooltip|EdgeInsets.symmetric(horizontal: 16, vertical: 8)|
  |tooltipMargin|margin between the tooltip and the touched spot|16|
  |tooltipHorizontalAlignment|horizontal alginment of tooltip relative to the spot|FLHorizontalAlignment.center|
@@ -169,6 +170,8 @@ When you change the chart's state, it animates to the new state internally (usin
 ### LineTouchResponse
 |PropName|Description|default value|
 |:-------|:----------|:------------|
+|touchLocation|the location of the touch event in the device pixels coordinates|required|
+|touchChartCoordinate|the location of the touch event in the chart coordinates|required|
 |lineBarSpots|a list of [TouchLineBarSpot](#TouchLineBarSpot)|null|
 
 ### ShowingTooltipIndicators

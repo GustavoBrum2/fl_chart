@@ -77,6 +77,9 @@ enum values {`start`, `end`, `center`, `spaceEvenly`, `spaceAround`, `spaceBetwe
 |fromY|draw stack item from this value|null|
 |toY|draw stack item to this value|null|
 |color|color of the stack item|null|
+|gradient|gradient of the stack item|null|
+|label|optional text label for the stack item|null|
+|labelStyle|optional TextStyle for the label|null|
 |borderSide|draw border stroke for each stack item|null|
 
 ### BarTouchData ([read about touch handling](handle_touches.md))
@@ -95,7 +98,7 @@ enum values {`start`, `end`, `center`, `spaceEvenly`, `spaceAround`, `spaceBetwe
  |PropName|Description|default value|
  |:-------|:----------|:------------|
  |tooltipBorder|border of the tooltip bubble|BorderSide.none|
- |tooltipRoundedRadius|background corner radius of the tooltip bubble|4|
+ |tooltipBorderRadius|background corner radius of the tooltip bubble|BorderRadius.circular(4)|
  |tooltipPadding|padding of the tooltip|EdgeInsets.symmetric(horizontal: 16, vertical: 8)|
  |tooltipMargin|margin between the tooltip and the touched spot|16|
  |tooltipHorizontalAlignment|horizontal alginment of tooltip relative to the bar|FLHorizontalAlignment.center|
@@ -120,6 +123,8 @@ enum values {`start`, `end`, `center`, `spaceEvenly`, `spaceAround`, `spaceBetwe
 ### BarTouchResponse
 |PropName|Description|default value|
 |:-------|:----------|:------------|
+|touchLocation|the location of the touch event in the device pixels coordinates|required|
+|touchChartCoordinate|the location of the touch event in the chart coordinates|required|
 |spot|a [BarTouchedSpot](#BarTouchedSpot) class to hold data about touched spot| null |
 
 ### BarTouchedSpot

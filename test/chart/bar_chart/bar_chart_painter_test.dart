@@ -1,3 +1,5 @@
+import 'dart:ui' as ui show Gradient;
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fl_chart/src/chart/bar_chart/bar_chart_helper.dart';
 import 'package:fl_chart/src/chart/bar_chart/bar_chart_painter.dart';
@@ -173,7 +175,7 @@ void main() {
       ];
 
       final tooltipData = BarTouchTooltipData(
-        tooltipRoundedRadius: 8,
+        tooltipBorderRadius: BorderRadius.circular(8),
         getTooltipColor: (group) => const Color(0xf33f33f3),
         maxContentWidth: 80,
         rotateAngle: 12,
@@ -279,7 +281,7 @@ void main() {
       ];
 
       final tooltipData = BarTouchTooltipData(
-        tooltipRoundedRadius: 8,
+        tooltipBorderRadius: BorderRadius.circular(8),
         getTooltipColor: (group) => const Color(0xf33f33f3),
         maxContentWidth: 80,
         rotateAngle: 12,
@@ -404,7 +406,7 @@ void main() {
         ];
 
         final tooltipData = BarTouchTooltipData(
-          tooltipRoundedRadius: 8,
+          tooltipBorderRadius: BorderRadius.circular(8),
           getTooltipColor: (group) => const Color(0xf33f33f3),
           maxContentWidth: 80,
           rotateAngle: 12,
@@ -497,7 +499,7 @@ void main() {
       ];
 
       final tooltipData = BarTouchTooltipData(
-        tooltipRoundedRadius: 8,
+        tooltipBorderRadius: BorderRadius.circular(8),
         getTooltipColor: (group) => const Color(0xf33f33f3),
         maxContentWidth: 80,
         rotateAngle: 12,
@@ -1256,17 +1258,46 @@ void main() {
               toY: 10,
               color: const Color(0x00000000),
               rodStackItems: [
-                BarChartRodStackItem(-5, -10, const Color(0x11111111)),
-                BarChartRodStackItem(0, -5, const Color(0x22222222)),
-                BarChartRodStackItem(0, 5, const Color(0x33333333)),
-                BarChartRodStackItem(5, 10, const Color(0x44444444)),
+                BarChartRodStackItem(
+                  -5,
+                  -10,
+                  const Color(0x11111111),
+                  label: '5',
+                ),
+                BarChartRodStackItem(
+                  0,
+                  -5,
+                  const Color(0x22222222),
+                  label: '5',
+                ),
+                BarChartRodStackItem(
+                  0,
+                  5,
+                  const Color(0x33333333),
+                  label: '5',
+                ),
+                BarChartRodStackItem(
+                  5,
+                  10,
+                  null,
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFFF0000), Color(0xFF00FF00)],
+                  ),
+                  label: '5',
+                ),
               ],
             ),
           ],
         ),
       ];
 
-      final data = BarChartData(barGroups: barGroups);
+      final (minY, maxY) = BarChartHelper().calculateMaxAxisValues(barGroups);
+
+      final data = BarChartData(
+        barGroups: barGroups,
+        minY: minY,
+        maxY: maxY,
+      );
 
       final barChartPainter = BarChartPainter();
       final holder =
@@ -1289,6 +1320,7 @@ void main() {
         final paint = inv.positionalArguments[1] as Paint;
         results.add({
           'paint_color': paint.color,
+          'gradient': paint.shader is ui.Gradient,
         });
       });
 
@@ -1307,8 +1339,16 @@ void main() {
         isSameColorAs(const Color(0x33333333)),
       );
       expect(
+        results[3]['gradient'],
+        false,
+      );
+      expect(
         results[4]['paint_color'],
-        isSameColorAs(const Color(0x44444444)),
+        isSameColorAs(const Color(0xFF000000)),
+      );
+      expect(
+        results[4]['gradient'],
+        true,
       );
     });
 
@@ -1522,8 +1562,362 @@ void main() {
 
       expect(HelperMethods.equalsPaths(expectedPath, currentPath), true);
     });
+
+    test('test small bar values with large border radius (issue #1757)', () {
+      const viewSize = Size(200, 200);
+
+      // Test case: bar height (2) is smaller than corner height (16)
+      // This should trigger the scale factor logic
+      final barGroups = [
+        BarChartGroupData(
+          x: 0,
+          barRods: [
+            BarChartRodData(
+              toY: 2,
+              width: 40,
+              rodStackItems: [
+                BarChartRodStackItem(
+                  0,
+                  1,
+                  Colors.amber,
+                ),
+                BarChartRodStackItem(
+                  1,
+                  2,
+                  Colors.red,
+                ),
+              ],
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
+              ),
+            ),
+          ],
+        ),
+      ];
+
+      final data = BarChartData(
+        barGroups: barGroups,
+        minY: 0,
+        maxY: 100,
+      );
+
+      final barChartPainter = BarChartPainter();
+      final holder =
+          PaintHolder<BarChartData>(data, data, TextScaler.noScaling);
+
+      final mockCanvasWrapper = MockCanvasWrapper();
+      when(mockCanvasWrapper.size).thenAnswer((realInvocation) => viewSize);
+      when(mockCanvasWrapper.canvas).thenReturn(MockCanvas());
+
+      final groupsX = data.calculateGroupsX(viewSize.width);
+      final barGroupsPosition = barChartPainter.calculateGroupAndBarsPosition(
+        viewSize,
+        groupsX,
+        barGroups,
+      );
+
+      final clipRectResults = <Rect>[];
+      when(mockCanvasWrapper.clipRect(captureAny)).thenAnswer((inv) {
+        final rect = inv.positionalArguments[0] as Rect;
+        clipRectResults.add(rect);
+      });
+
+      when(mockCanvasWrapper.save()).thenReturn(null);
+      when(mockCanvasWrapper.restore()).thenReturn(null);
+      when(mockCanvasWrapper.drawRRect(any, any)).thenReturn(null);
+
+      barChartPainter.drawBars(mockCanvasWrapper, barGroupsPosition, holder);
+
+      // Verify that clipRect was called for each stack item
+      expect(
+        clipRectResults.length,
+        2,
+        reason: 'Should have clipped for 2 stack items',
+      );
+
+      // Verify that the clip rectangles have been scaled properly
+      // The total bar height in pixels would be very small (2% of 200 = 4px)
+      // But corner height is 8, so scale factor should be 8/4 = 2.0
+      // Each stack item should be scaled proportionally
+      final rect1 = clipRectResults[0];
+      final rect2 = clipRectResults[1];
+
+      // Debug: print actual values
+      // print('rect1: $rect1, height: ${rect1.height}');
+      // print('rect2: $rect2, height: ${rect2.height}');
+
+      // Stack items should not overlap and should be adjacent
+      expect(
+        rect2.bottom,
+        closeTo(rect1.top, tolerance),
+        reason:
+            'Stack items should be adjacent without gaps (rect2.bottom should equal rect1.top)',
+      );
+
+      // The combined height should equal the scaled total height (cornerHeight)
+      final totalScaledHeight = rect1.height + rect2.height;
+      expect(
+        totalScaledHeight,
+        closeTo(8.0, tolerance),
+        reason: 'Total scaled height should equal corner height (8px)',
+      );
+
+      // Heights should be proportional to data values (1:1 ratio)
+      expect(
+        rect1.height,
+        closeTo(rect2.height, tolerance),
+        reason:
+            'Stack items with equal data heights (1) should have equal pixel heights',
+      );
+    });
   });
 
+  group('drawBars() - label tests', () {
+    late MockUtils mockUtils;
+    final utilsMainInstance = Utils();
+
+    setUp(() {
+      mockUtils = MockUtils();
+      Utils.changeInstance(mockUtils);
+      when(mockUtils.getThemeAwareTextStyle(any, any))
+          .thenAnswer((realInvocation) => textStyle1);
+      when(mockUtils.calculateRotationOffset(any, any))
+          .thenAnswer((realInvocation) => Offset.zero);
+      when(mockUtils.convertRadiusToSigma(any))
+          .thenAnswer((realInvocation) => 4.0);
+      when(mockUtils.getEfficientInterval(any, any))
+          .thenAnswer((realInvocation) => 1.0);
+      when(mockUtils.getBestInitialIntervalValue(any, any, any))
+          .thenAnswer((realInvocation) => 1.0);
+      when(mockUtils.normalizeBorderRadius(any, any))
+          .thenAnswer((realInvocation) => BorderRadius.zero);
+      when(mockUtils.normalizeBorderSide(any, any)).thenAnswer(
+        (realInvocation) => const BorderSide(color: MockData.color0),
+      );
+    });
+
+    tearDown(() {
+      Utils.changeInstance(utilsMainInstance);
+    });
+
+    test('should render simple stack item labels', () {
+      const viewSize = Size(200, 100);
+
+      final barGroups = [
+        BarChartGroupData(
+          x: 0,
+          barRods: [
+            BarChartRodData(
+              toY: 10,
+              width: 20,
+              color: Colors.transparent,
+              rodStackItems: [
+                BarChartRodStackItem(
+                  0,
+                  5,
+                  Colors.red,
+                  label: 'Label 1',
+                  labelStyle: const TextStyle(fontSize: 15),
+                ),
+                BarChartRodStackItem(
+                  5,
+                  10,
+                  Colors.blue,
+                  label: 'Label 2',
+                ),
+              ],
+            ),
+          ],
+        ),
+      ];
+
+      final data = BarChartData(
+        titlesData: const FlTitlesData(show: false),
+        barGroups: barGroups,
+        minY: 0,
+        maxY: 10,
+      );
+
+      final barChartPainter = BarChartPainter();
+      final holder =
+          PaintHolder<BarChartData>(data, data, TextScaler.noScaling);
+
+      final mockCanvas = MockCanvas();
+      final mockCanvasWrapper = MockCanvasWrapper();
+      when(mockCanvasWrapper.size).thenAnswer((realInvocation) => viewSize);
+      when(mockCanvasWrapper.canvas).thenReturn(mockCanvas);
+      when(mockCanvasWrapper.save()).thenReturn(null);
+      when(mockCanvasWrapper.restore()).thenReturn(null);
+      when(mockCanvasWrapper.translate(any, any)).thenReturn(null);
+      when(mockCanvasWrapper.rotate(any)).thenReturn(null);
+      when(mockCanvasWrapper.drawRRect(any, any)).thenReturn(null);
+
+      final paragraphs = <Map<String, dynamic>>[];
+      when(mockCanvas.drawParagraph(captureAny, captureAny)).thenAnswer((inv) {
+        final paragraph = inv.positionalArguments[0];
+        final offset = inv.positionalArguments[1] as Offset;
+        paragraphs.add({
+          'paragraph': paragraph,
+          'offset': offset,
+        });
+        return;
+      });
+
+      final groupsX = data.calculateGroupsX(viewSize.width);
+      final barGroupsPosition = barChartPainter.calculateGroupAndBarsPosition(
+        viewSize,
+        groupsX,
+        barGroups,
+      );
+
+      barChartPainter.drawBars(mockCanvasWrapper, barGroupsPosition, holder);
+
+      expect(paragraphs.length, 2, reason: 'Should have drawn 2 labels');
+    });
+
+    test('should render long stack item labels', () {
+      const viewSize = Size(200, 100);
+
+      final barGroups = [
+        BarChartGroupData(
+          x: 0,
+          barRods: [
+            BarChartRodData(
+              toY: 10,
+              width: 20,
+              color: Colors.transparent,
+              rodStackItems: [
+                BarChartRodStackItem(
+                  0,
+                  5,
+                  Colors.red,
+                  label: 'This is a very long label that might not fit',
+                  labelStyle: const TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ];
+
+      final data = BarChartData(
+        titlesData: const FlTitlesData(show: false),
+        barGroups: barGroups,
+        minY: 0,
+        maxY: 10,
+      );
+
+      final barChartPainter = BarChartPainter();
+      final holder =
+          PaintHolder<BarChartData>(data, data, TextScaler.noScaling);
+
+      final mockCanvas = MockCanvas();
+      final mockCanvasWrapper = MockCanvasWrapper();
+      when(mockCanvasWrapper.size).thenAnswer((realInvocation) => viewSize);
+      when(mockCanvasWrapper.canvas).thenReturn(mockCanvas);
+      when(mockCanvasWrapper.save()).thenReturn(null);
+      when(mockCanvasWrapper.restore()).thenReturn(null);
+      when(mockCanvasWrapper.translate(any, any)).thenReturn(null);
+      when(mockCanvasWrapper.rotate(any)).thenReturn(null);
+      when(mockCanvasWrapper.drawRRect(any, any)).thenReturn(null);
+
+      final paragraphs = <Map<String, dynamic>>[];
+      when(mockCanvas.drawParagraph(captureAny, captureAny)).thenAnswer((inv) {
+        final paragraph = inv.positionalArguments[0];
+        final offset = inv.positionalArguments[1] as Offset;
+        paragraphs.add({
+          'paragraph': paragraph,
+          'offset': offset,
+        });
+        return;
+      });
+
+      final groupsX = data.calculateGroupsX(viewSize.width);
+      final barGroupsPosition = barChartPainter.calculateGroupAndBarsPosition(
+        viewSize,
+        groupsX,
+        barGroups,
+      );
+
+      barChartPainter.drawBars(mockCanvasWrapper, barGroupsPosition, holder);
+
+      expect(paragraphs.length, 1, reason: 'Should have drawn 1 long label');
+    });
+
+    test('should render labels with special characters and emojis', () {
+      const viewSize = Size(200, 100);
+
+      final barGroups = [
+        BarChartGroupData(
+          x: 0,
+          barRods: [
+            BarChartRodData(
+              toY: 10,
+              width: 20,
+              color: Colors.transparent,
+              rodStackItems: [
+                BarChartRodStackItem(
+                  0,
+                  10,
+                  Colors.purple,
+                  label: 'Label with emojis 🎯 & symbols!',
+                  labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ];
+
+      final data = BarChartData(
+        titlesData: const FlTitlesData(show: false),
+        barGroups: barGroups,
+        minY: 0,
+        maxY: 10,
+      );
+
+      final barChartPainter = BarChartPainter();
+      final holder =
+          PaintHolder<BarChartData>(data, data, TextScaler.noScaling);
+
+      final mockCanvas = MockCanvas();
+      final mockCanvasWrapper = MockCanvasWrapper();
+      when(mockCanvasWrapper.size).thenAnswer((realInvocation) => viewSize);
+      when(mockCanvasWrapper.canvas).thenReturn(mockCanvas);
+      when(mockCanvasWrapper.save()).thenReturn(null);
+      when(mockCanvasWrapper.restore()).thenReturn(null);
+      when(mockCanvasWrapper.translate(any, any)).thenReturn(null);
+      when(mockCanvasWrapper.rotate(any)).thenReturn(null);
+      when(mockCanvasWrapper.drawRRect(any, any)).thenReturn(null);
+
+      final paragraphs = <Map<String, dynamic>>[];
+      when(mockCanvas.drawParagraph(captureAny, captureAny)).thenAnswer((inv) {
+        final paragraph = inv.positionalArguments[0];
+        final offset = inv.positionalArguments[1] as Offset;
+        paragraphs.add({
+          'paragraph': paragraph,
+          'offset': offset,
+        });
+        return;
+      });
+
+      final groupsX = data.calculateGroupsX(viewSize.width);
+      final barGroupsPosition = barChartPainter.calculateGroupAndBarsPosition(
+        viewSize,
+        groupsX,
+        barGroups,
+      );
+
+      barChartPainter.drawBars(mockCanvasWrapper, barGroupsPosition, holder);
+
+      expect(
+        paragraphs.length,
+        1,
+        reason: 'Should have drawn 1 label with special characters',
+      );
+    });
+  });
   group('drawTouchTooltip()', () {
     test('test 1', () {
       final mockUtils = MockUtils();
@@ -1592,7 +1986,7 @@ void main() {
       ];
 
       final tooltipData = BarTouchTooltipData(
-        tooltipRoundedRadius: 8,
+        tooltipBorderRadius: BorderRadius.circular(8),
         getTooltipColor: (group) => const Color(0xf33f33f3),
         maxContentWidth: 80,
         rotateAngle: 12,
@@ -1789,7 +2183,10 @@ void main() {
       ];
 
       final tooltipData = BarTouchTooltipData(
-        tooltipRoundedRadius: 8,
+        tooltipBorderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(8),
+        ),
         getTooltipColor: (group) => const Color(0xf33f33f3),
         maxContentWidth: 80,
         rotateAngle: 12,
@@ -1877,7 +2274,10 @@ void main() {
           verify(mockCanvasWrapper.drawRRect(captureAny, captureAny))
             ..called(2);
       final rrect = result1.captured[0] as RRect;
-      expect(rrect.blRadius, const Radius.circular(8));
+      expect(rrect.tlRadius, const Radius.circular(10));
+      expect(rrect.trRadius, const Radius.circular(8));
+      expect(rrect.blRadius, Radius.zero);
+      expect(rrect.brRadius, Radius.zero);
       expect(rrect.width, 112);
       expect(rrect.height, 90);
       expect(rrect.left, -80);
@@ -1890,7 +2290,10 @@ void main() {
       final rRectBorder = result1.captured[2] as RRect;
       final paintBorder = result1.captured[3] as Paint;
 
-      expect(rRectBorder.blRadius, const Radius.circular(8));
+      expect(rRectBorder.tlRadius, const Radius.circular(10));
+      expect(rRectBorder.trRadius, const Radius.circular(8));
+      expect(rRectBorder.blRadius, Radius.zero);
+      expect(rRectBorder.brRadius, Radius.zero);
       expect(rRectBorder.width, 112);
       expect(rRectBorder.height, 90);
       expect(rRectBorder.left, -80);
@@ -1960,7 +2363,7 @@ void main() {
       ];
 
       final tooltipData = BarTouchTooltipData(
-        tooltipRoundedRadius: 8,
+        tooltipBorderRadius: BorderRadius.circular(8),
         getTooltipColor: (group) => const Color(0xf33f33f3),
         maxContentWidth: 8000,
         rotateAngle: 12,
@@ -2094,19 +2497,22 @@ void main() {
           0,
           3,
           const Color(0x11111110),
-          const BorderSide(color: Color(0x11111111)),
+          label: '5',
+          borderSide: const BorderSide(color: Color(0x11111111)),
         ),
         BarChartRodStackItem(
           3,
           8,
           const Color(0x22222220),
-          const BorderSide(color: Color(0x22222221), width: 2),
+          label: '5',
+          borderSide: const BorderSide(color: Color(0x22222221), width: 2),
         ),
         BarChartRodStackItem(
           8,
           10,
           const Color(0x33333330),
-          const BorderSide(color: Color(0x33333331), width: 3),
+          label: '5',
+          borderSide: const BorderSide(color: Color(0x33333331), width: 3),
         ),
       ];
 
@@ -2127,7 +2533,7 @@ void main() {
       final data = BarChartData(
         groupsSpace: 10,
         barGroups: barGroups,
-        barTouchData: BarTouchData(),
+        barTouchData: const BarTouchData(),
         minY: minY,
         maxY: maxY,
       );
@@ -2316,9 +2722,9 @@ void main() {
         titlesData: const FlTitlesData(show: false),
         alignment: BarChartAlignment.center,
         groupsSpace: 10,
-        barTouchData: BarTouchData(
+        barTouchData: const BarTouchData(
           handleBuiltInTouches: true,
-          touchExtraThreshold: const EdgeInsets.all(1),
+          touchExtraThreshold: EdgeInsets.all(1),
         ),
         minY: minY,
         maxY: maxY,
@@ -2393,7 +2799,12 @@ void main() {
               color: const Color(0x00000000),
               borderRadius: const BorderRadius.all(Radius.circular(0.1)),
               rodStackItems: [
-                BarChartRodStackItem(0, 5, const Color(0xFF0F0F0F)),
+                BarChartRodStackItem(
+                  0,
+                  5,
+                  const Color(0xFF0F0F0F),
+                  label: '5',
+                ),
               ],
             ),
           ],
@@ -2419,9 +2830,9 @@ void main() {
         titlesData: const FlTitlesData(show: false),
         alignment: BarChartAlignment.center,
         groupsSpace: 10,
-        barTouchData: BarTouchData(
+        barTouchData: const BarTouchData(
           handleBuiltInTouches: true,
-          touchExtraThreshold: const EdgeInsets.all(1),
+          touchExtraThreshold: EdgeInsets.all(1),
         ),
         minY: minY,
         maxY: maxY,
@@ -2505,11 +2916,11 @@ void main() {
         groupsSpace: 10,
         minY: -10,
         maxY: 15,
-        barTouchData: BarTouchData(
+        barTouchData: const BarTouchData(
           enabled: true,
           handleBuiltInTouches: true,
           allowTouchBarBackDraw: true,
-          touchExtraThreshold: const EdgeInsets.all(1),
+          touchExtraThreshold: EdgeInsets.all(1),
         ),
       );
 
@@ -2581,11 +2992,11 @@ void main() {
           groupsSpace: 10,
           minY: -10,
           maxY: 15,
-          barTouchData: BarTouchData(
+          barTouchData: const BarTouchData(
             enabled: true,
             handleBuiltInTouches: true,
             allowTouchBarBackDraw: true,
-            touchExtraThreshold: const EdgeInsets.all(1),
+            touchExtraThreshold: EdgeInsets.all(1),
           ),
         );
 
@@ -2645,11 +3056,11 @@ void main() {
           groupsSpace: 10,
           minY: -10,
           maxY: 15,
-          barTouchData: BarTouchData(
+          barTouchData: const BarTouchData(
             enabled: true,
             handleBuiltInTouches: true,
             allowTouchBarBackDraw: true,
-            touchExtraThreshold: const EdgeInsets.all(1),
+            touchExtraThreshold: EdgeInsets.all(1),
           ),
         );
 
@@ -3134,6 +3545,12 @@ void main() {
           holder.data.extraLinesData.horizontalLines[0].dashArray,
         ),
       ).called(2);
+    });
+  });
+
+  group('BarChartRodStackItem()', () {
+    test('throws an exception if color and gradient is null', () {
+      expect(() => BarChartRodStackItem(0, 10, null), throwsAssertionError);
     });
   });
 }

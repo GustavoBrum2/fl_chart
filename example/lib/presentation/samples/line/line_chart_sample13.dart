@@ -326,7 +326,7 @@ class _LineChartSample13State extends State<LineChartSample13> {
     );
   }
 
-  _touchCallback(FlTouchEvent event, LineTouchResponse? touchResponse) {
+  void _touchCallback(FlTouchEvent event, LineTouchResponse? touchResponse) {
     if (!event.isInterestedForInteractions ||
         touchResponse?.lineBarSpots == null ||
         touchResponse!.lineBarSpots!.isEmpty) {

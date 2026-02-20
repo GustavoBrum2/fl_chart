@@ -16,14 +16,10 @@ abstract class BaseChartData with EquatableMixin {
   /// [touchData] defines the touch behavior and responses.
   BaseChartData({
     FlBorderData? borderData,
-    required this.touchData,
   }) : borderData = borderData ?? FlBorderData();
 
   /// Holds data to drawing border around the chart.
   final FlBorderData borderData;
-
-  /// Holds data needed to touch behavior and responses.
-  final FlTouchData touchData;
 
   BaseChartData lerp(BaseChartData a, BaseChartData b, double t);
 
@@ -31,7 +27,6 @@ abstract class BaseChartData with EquatableMixin {
   @override
   List<Object?> get props => [
         borderData,
-        touchData,
       ];
 }
 
@@ -187,7 +182,12 @@ typedef MouseCursorResolver<R extends BaseTouchResponse> = MouseCursor Function(
 
 /// This class holds the touch response details of charts.
 abstract class BaseTouchResponse {
-  const BaseTouchResponse();
+  BaseTouchResponse({
+    required this.touchLocation,
+  });
+
+  /// The location of the touch in pixels on the screen.
+  final Offset touchLocation;
 }
 
 /// Controls an element horizontal alignment to given point.

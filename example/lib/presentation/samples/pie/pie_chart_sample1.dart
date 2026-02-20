@@ -111,9 +111,8 @@ class PieChartSample1State extends State {
         const color2 = AppColors.contentColorPink;
         const color3 = AppColors.contentColorGreen;
 
-        switch (i) {
-          case 0:
-            return PieChartSectionData(
+        return switch (i) {
+          0 => PieChartSectionData(
               color: color0,
               value: 25,
               title: '',
@@ -123,10 +122,9 @@ class PieChartSample1State extends State {
                   ? const BorderSide(
                       color: AppColors.contentColorWhite, width: 6)
                   : BorderSide(
-                      color: AppColors.contentColorWhite.withOpacity( 0)),
-            );
-          case 1:
-            return PieChartSectionData(
+                      color: AppColors.contentColorWhite.withValues(alpha: 0)),
+            ),
+          1 => PieChartSectionData(
               color: color1,
               value: 25,
               title: '',
@@ -136,10 +134,9 @@ class PieChartSample1State extends State {
                   ? const BorderSide(
                       color: AppColors.contentColorWhite, width: 6)
                   : BorderSide(
-                      color: AppColors.contentColorWhite.withOpacity( 0)),
-            );
-          case 2:
-            return PieChartSectionData(
+                      color: AppColors.contentColorWhite.withValues(alpha: 0)),
+            ),
+          2 => PieChartSectionData(
               color: color2,
               value: 25,
               title: '',
@@ -149,10 +146,9 @@ class PieChartSample1State extends State {
                   ? const BorderSide(
                       color: AppColors.contentColorWhite, width: 6)
                   : BorderSide(
-                      color: AppColors.contentColorWhite.withOpacity( 0)),
-            );
-          case 3:
-            return PieChartSectionData(
+                      color: AppColors.contentColorWhite.withValues(alpha: 0)),
+            ),
+          3 => PieChartSectionData(
               color: color3,
               value: 25,
               title: '',
@@ -162,11 +158,10 @@ class PieChartSample1State extends State {
                   ? const BorderSide(
                       color: AppColors.contentColorWhite, width: 6)
                   : BorderSide(
-                      color: AppColors.contentColorWhite.withOpacity( 0)),
-            );
-          default:
-            throw Error();
-        }
+                      color: AppColors.contentColorWhite.withValues(alpha: 0)),
+            ),
+          _ => throw StateError('Invalid'),
+        };
       },
     );
   }

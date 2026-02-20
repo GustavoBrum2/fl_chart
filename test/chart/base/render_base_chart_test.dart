@@ -156,10 +156,6 @@ class TestRenderBaseChart extends RenderBaseChart<LineTouchResponse> {
     required this.longPressGestureRecognizerOverride,
   }) : super(touchData, context, canBeScaled: canBeScaled);
 
-  int panGestureAddPointerCallCount = 0;
-  int longPressGestureAddPointerCallCount = 0;
-  int tapGestureAddPointerCallCount = 0;
-
   final PanGestureRecognizer panGestureRecognizerOverride;
   final TapGestureRecognizer tapGestureRecognizerOverride;
   final LongPressGestureRecognizer longPressGestureRecognizerOverride;
@@ -174,7 +170,11 @@ class TestRenderBaseChart extends RenderBaseChart<LineTouchResponse> {
 
   @override
   LineTouchResponse getResponseAtLocation(Offset localPosition) {
-    return const LineTouchResponse([]);
+    return LineTouchResponse(
+      touchLocation: Offset.zero,
+      touchChartCoordinate: Offset.zero,
+      lineBarSpots: [],
+    );
   }
 }
 

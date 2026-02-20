@@ -18,6 +18,7 @@ import '../data_pool.dart';
 import 'line_chart_painter_test.mocks.dart';
 
 @GenerateMocks([Canvas, CanvasWrapper, BuildContext, Utils, LineChartPainter])
+@GenerateNiceMocks([MockSpec<LinearGradient>()])
 void main() {
   group('paint()', () {
     test('test 1', () {
@@ -2172,14 +2173,13 @@ void main() {
         FlSpot(8, 9),
       ];
 
+      final mockLinearGradient = MockLinearGradient();
       final lineChartBarData1 = LineChartBarData(
         spots: barSpots1,
         barWidth: 80,
         isStrokeCapRound: true,
         isStepLineChart: true,
-        gradient: const LinearGradient(
-          colors: [Color(0xF0F0F0F0), Color(0x0100FF00)],
-        ),
+        gradient: mockLinearGradient,
         dashArray: [1, 2, 3],
       );
 
@@ -2199,6 +2199,11 @@ void main() {
       final mockCanvasWrapper = MockCanvasWrapper();
       when(mockCanvasWrapper.size).thenAnswer((realInvocation) => viewSize);
       when(mockCanvasWrapper.canvas).thenReturn(MockCanvas());
+      // just to provide a dummy Shader, don't care about its value
+      provideDummy<Shader>(
+        const LinearGradient(colors: [Color(0xF0F0F0F0), Color(0x0100FF00)])
+            .createShader(Rect.zero),
+      );
 
       final barPath = Path()
         ..moveTo(10, 10)
@@ -2222,6 +2227,29 @@ void main() {
       expect(paint.shader != null, true);
       expect(paint.maskFilter, null);
       expect(paint.strokeWidth, 80);
+
+      final createShaderWithRectAroundTheLine =
+          verify(mockLinearGradient.createShader(captureAny))..called(1);
+      expect(
+        createShaderWithRectAroundTheLine.captured.single,
+        const Rect.fromLTRB(10, 10, 80, 10),
+      );
+
+      lineChartPainter.drawBar(
+        mockCanvasWrapper,
+        barPath,
+        lineChartBarData1.copyWith(
+          gradientArea: LineChartGradientArea.wholeChart,
+        ),
+        holder,
+      );
+
+      final createShaderWithRectWholeChart =
+          verify(mockLinearGradient.createShader(captureAny))..called(1);
+      expect(
+        createShaderWithRectWholeChart.captured.single,
+        Offset.zero & viewSize,
+      );
     });
   });
 
@@ -2592,6 +2620,14 @@ void main() {
                 direction: LabelDirection.vertical,
               ),
             ),
+            VerticalLine(
+              x: 9,
+              label: VerticalLineLabel(
+                show: true,
+                labelResolver: verticalLabelResolver,
+                direction: LabelDirection.verticalMirrored,
+              ),
+            ),
           ],
           horizontalLines: [
             HorizontalLine(
@@ -2607,6 +2643,14 @@ void main() {
                 show: true,
                 labelResolver: horizontalLabelResolver,
                 direction: LabelDirection.vertical,
+              ),
+            ),
+            HorizontalLine(
+              y: 9,
+              label: HorizontalLineLabel(
+                show: true,
+                labelResolver: horizontalLabelResolver,
+                direction: LabelDirection.verticalMirrored,
               ),
             ),
           ],
@@ -2730,7 +2774,10 @@ void main() {
 
       final tooltipData = LineTouchTooltipData(
         getTooltipColor: (touchedSpot) => const Color(0x11111111),
-        tooltipRoundedRadius: 12,
+        tooltipBorderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(8),
+        ),
         rotateAngle: 43,
         maxContentWidth: 100,
         tooltipMargin: 12,
@@ -2804,14 +2851,28 @@ void main() {
       final paint = result1.captured[1] as Paint;
       expect(
         rRect,
-        RRect.fromLTRBR(0, 40, 38, 78, const Radius.circular(12)),
+        RRect.fromLTRBAndCorners(
+          0,
+          40,
+          38,
+          78,
+          topLeft: const Radius.circular(10),
+          topRight: const Radius.circular(8),
+        ),
       );
       expect(paint.color, isSameColorAs(const Color(0x11111111)));
       final rRectBorder = result1.captured[2] as RRect;
       final paintBorder = result1.captured[3] as Paint;
       expect(
         rRectBorder,
-        RRect.fromLTRBR(0, 40, 38, 78, const Radius.circular(12)),
+        RRect.fromLTRBAndCorners(
+          0,
+          40,
+          38,
+          78,
+          topLeft: const Radius.circular(10),
+          topRight: const Radius.circular(8),
+        ),
       );
       expect(paintBorder.color, isSameColorAs(const Color(0x11111111)));
       expect(paintBorder.strokeWidth, 2);
@@ -2841,7 +2902,7 @@ void main() {
 
       final tooltipData = LineTouchTooltipData(
         getTooltipColor: (touchedSpot) => const Color(0x11111111),
-        tooltipRoundedRadius: 12,
+        tooltipBorderRadius: BorderRadius.circular(12),
         rotateAngle: 43,
         maxContentWidth: 100,
         tooltipMargin: 12,
@@ -2952,7 +3013,7 @@ void main() {
 
       final tooltipData = LineTouchTooltipData(
         getTooltipColor: (touchedSpot) => const Color(0x11111111),
-        tooltipRoundedRadius: 12,
+        tooltipBorderRadius: BorderRadius.circular(12),
         rotateAngle: 43,
         maxContentWidth: 100,
         tooltipMargin: 12,
@@ -3073,7 +3134,7 @@ void main() {
 
       final tooltipData = LineTouchTooltipData(
         getTooltipColor: (touchedSpot) => const Color(0x11111111),
-        tooltipRoundedRadius: 12,
+        tooltipBorderRadius: BorderRadius.circular(12),
         rotateAngle: 43,
         maxContentWidth: 100,
         tooltipMargin: 12,
@@ -3195,7 +3256,7 @@ void main() {
 
       final tooltipData = LineTouchTooltipData(
         getTooltipColor: (touchedSpot) => const Color(0x11111111),
-        tooltipRoundedRadius: 12,
+        tooltipBorderRadius: BorderRadius.circular(12),
         rotateAngle: 43,
         maxContentWidth: 100,
         tooltipMargin: 12,
@@ -3286,7 +3347,7 @@ void main() {
 
         final tooltipData = LineTouchTooltipData(
           getTooltipColor: (touchedSpot) => const Color(0x11111111),
-          tooltipRoundedRadius: 12,
+          tooltipBorderRadius: BorderRadius.circular(12),
           rotateAngle: 43,
           maxContentWidth: 100,
           tooltipMargin: 12,

@@ -109,8 +109,8 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
       canvasWrapper.restore();
     }
 
-    for (var i = 0; i < targetData.barGroups.length; i++) {
-      final barGroup = targetData.barGroups[i];
+    for (var i = 0; i < data.barGroups.length; i++) {
+      final barGroup = data.barGroups[i];
       for (var j = 0; j < barGroup.barRods.length; j++) {
         if (!barGroup.showingTooltipIndicators.contains(j)) {
           continue;
@@ -305,21 +305,81 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
 
           // draw rod stack
           if (barRod.rodStackItems.isNotEmpty) {
+            // Calculate scale factor to ensure minimum height for corner radius
+            final totalHeightPixels =
+                (getPixelY(barRod.fromY, viewSize, holder) -
+                        getPixelY(barRod.toY, viewSize, holder))
+                    .abs();
+
+            final scaleFactor = totalHeightPixels < cornerHeight
+                ? cornerHeight / totalHeightPixels
+                : 1.0;
+
             for (var i = 0; i < barRod.rodStackItems.length; i++) {
               final stackItem = barRod.rodStackItems[i];
-              final stackFromY = getPixelY(stackItem.fromY, viewSize, holder);
-              final stackToY = getPixelY(stackItem.toY, viewSize, holder);
+
+              var stackFromY = getPixelY(stackItem.fromY, viewSize, holder);
+              var stackToY = getPixelY(stackItem.toY, viewSize, holder);
+
+              // Apply scale factor only when needed
+              if (scaleFactor > 1.0) {
+                final basePixelY = getPixelY(barRod.fromY, viewSize, holder);
+                stackFromY =
+                    basePixelY - (basePixelY - stackFromY) * scaleFactor;
+                stackToY = basePixelY - (basePixelY - stackToY) * scaleFactor;
+              }
 
               final isNegative = stackItem.toY < stackItem.fromY;
-              _barPaint.color = stackItem.color;
               final rect = isNegative
                   ? Rect.fromLTRB(left, stackFromY, right, stackToY)
                   : Rect.fromLTRB(left, stackToY, right, stackFromY);
+              _barPaint.setColorOrGradient(
+                stackItem.color,
+                stackItem.gradient,
+                rect,
+              );
               canvasWrapper
                 ..save()
                 ..clipRect(rect)
                 ..drawRRect(barRRect, _barPaint)
                 ..restore();
+              if (stackItem.label != null) {
+                final textStyle = stackItem.labelStyle ??
+                    const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    );
+
+                final labelText = stackItem.label!;
+                final textSpan = TextSpan(text: labelText, style: textStyle);
+                final textPainter = TextPainter(
+                  text: textSpan,
+                  textAlign: TextAlign.center,
+                  textDirection: TextDirection.ltr,
+                  textScaler: holder.textScaler,
+                )..layout();
+
+                // Calculate rotation
+                final rotation = -holder.data.rotationQuarterTurns * (pi / 2);
+                final centerX = x;
+                final centerY = (stackFromY + stackToY) / 2;
+
+                // Check if text fits vertically
+                final segmentHeight = (stackFromY - stackToY).abs();
+                if (textPainter.height < segmentHeight) {
+                  canvasWrapper
+                    ..save()
+                    ..translate(centerX, centerY)
+                    ..rotate(rotation)
+                    ..translate(
+                      -textPainter.width / 2,
+                      -textPainter.height / 2,
+                    );
+                  textPainter.paint(canvasWrapper.canvas, Offset.zero);
+                  canvasWrapper.restore();
+                }
+              }
 
               // draw border stroke for each stack item
               drawStackItemBorderStroke(
@@ -575,13 +635,12 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
       }
     }
 
-    final radius = Radius.circular(tooltipData.tooltipRoundedRadius);
     final roundedRect = RRect.fromRectAndCorners(
       rect,
-      topLeft: radius,
-      topRight: radius,
-      bottomLeft: radius,
-      bottomRight: radius,
+      topLeft: tooltipData.tooltipBorderRadius.topLeft,
+      topRight: tooltipData.tooltipBorderRadius.topRight,
+      bottomLeft: tooltipData.tooltipBorderRadius.bottomLeft,
+      bottomRight: tooltipData.tooltipBorderRadius.bottomRight,
     );
 
     /// set tooltip's background color for each rod

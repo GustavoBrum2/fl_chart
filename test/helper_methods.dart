@@ -45,6 +45,8 @@ class HelperMethods {
     return true;
   }
 
+  // This is actually used, I don't know why the linter thinks otherwise
+  // ignore: unreachable_from_main
   static bool equalsRRects(
     RRect rrect1,
     RRect rrect2, {
@@ -79,6 +81,24 @@ class HelperMethods {
     }
 
     if (rrect1.tlRadius != rrect2.tlRadius) {
+      return false;
+    }
+
+    return true;
+  }
+
+  // This is actually used, I don't know why the linter thinks otherwise
+  // ignore: unreachable_from_main
+  static bool equalsOffsets(
+    Offset offset1,
+    Offset offset2, {
+    double tolerance = 0.05,
+  }) {
+    if ((offset1.dx - offset2.dx).abs() > tolerance) {
+      return false;
+    }
+
+    if ((offset1.dy - offset2.dy).abs() > tolerance) {
       return false;
     }
 
